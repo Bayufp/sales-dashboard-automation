@@ -1,0 +1,246 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1lYzEMjAvR5x8rYR0GnFf8VWHaZaIApNcdgD2EmWL0nM",
+          "mode": "list",
+          "cachedResultName": "Data Penjualan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lYzEMjAvR5x8rYR0GnFf8VWHaZaIApNcdgD2EmWL0nM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 297890669,
+          "mode": "list",
+          "cachedResultName": "SalesData",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lYzEMjAvR5x8rYR0GnFf8VWHaZaIApNcdgD2EmWL0nM/edit#gid=297890669"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -624,
+        -192
+      ],
+      "id": "551b8434-a8da-4538-8334-22a810845c77",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3hiA6S0grKXoLaHz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "Jumlah_Terjual"
+            },
+            {
+              "aggregation": "sum",
+              "field": "Total_Penjualan"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        -416,
+        -192
+      ],
+      "id": "07416e46-6295-4129-9aae-b52ec3996015",
+      "name": "Summarize"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lYzEMjAvR5x8rYR0GnFf8VWHaZaIApNcdgD2EmWL0nM",
+          "mode": "list",
+          "cachedResultName": "Data Penjualan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lYzEMjAvR5x8rYR0GnFf8VWHaZaIApNcdgD2EmWL0nM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1229405698,
+          "mode": "list",
+          "cachedResultName": "Summary",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lYzEMjAvR5x8rYR0GnFf8VWHaZaIApNcdgD2EmWL0nM/edit#gid=1229405698"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tanggal Ringkasan": "={{ $now.toFormat('yyyy-LL-dd') }}",
+            "Total Jumlah Terjual": "={{ $json.sum_Jumlah_Terjual }}",
+            "Total Penjualan": "={{ $json.sum_Total_Penjualan }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Tanggal Ringkasan",
+              "displayName": "Tanggal Ringkasan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Jumlah Terjual",
+              "displayName": "Total Jumlah Terjual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Penjualan",
+              "displayName": "Total Penjualan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -208,
+        -192
+      ],
+      "id": "9d0aa9fc-ff08-4bfe-9f11-af01f49986ea",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3hiA6S0grKXoLaHz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "6803794081",
+        "text": "=Laporan Penjualan Harian \n\nTotal Produk Terjual: *{{$json.sum_Jumlah_Terjual}}*\nTotal Penjualan: *Rp {{$json.sum_Total_Penjualan}}* \nTanggal: {{$now.toFormat(\"dd-LL-yyyy\")}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        -192
+      ],
+      "id": "d8b0a762-744c-4c61-9207-af0d5741958a",
+      "name": "Send a text message",
+      "webhookId": "bccd5c3b-3ee7-4c9d-9d8e-656ff783e29a",
+      "credentials": {
+        "telegramApi": {
+          "id": "ntm3KFEv6eyT2jmU",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            },
+            {
+              "field": "weeks",
+              "triggerAtHour": 18
+            },
+            {
+              "field": "months",
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -848,
+        -192
+      ],
+      "id": "ed4dbd85-ed6b-40c4-bb1c-1792469f34eb",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "277285c7-8fea-4439-9442-1133dcf21919",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "433b8cb4dd7c47c1f616e67f10511d8752313d21a50e2fdb9e1985ae88bc34c5"
+  },
+  "id": "qss2IYAOY2Yc4oVh",
+  "tags": []
+}
