@@ -9,27 +9,21 @@ Laporan akan ter-update secara otomatis berdasarkan data yang masuk.
 2. n8n melakukan pemrosesan data (filter, agregasi).
 3. Hasil data disimpan ke sheet `Summary`.
 4. Dashboard visual dibuat di Google Sheets / Looker Studio.
-
-## Struktur Folder
-
-sales-dashboard-automation/
-├── workflow-n8n.png # Screenshot workflow n8n
-├── sales-report-workflow.json # File workflow n8n
-├── Dashboard.png # Screenshot dashboard (grafik)
-├── Summary.png # Screenshot ringkasan data
-└── README.md # Dokumentasi proyek
+5. hasil Penjualan per Hari akan di kirim Otomatis ke Telegram.
 
 ## Contoh Output
 
 - Workflow n8n: `workflow-n8n.png`
 - Dashboard penjualan: `Dashboard.png`
 - Ringkasan data: `Summary.png`
+- Laporan penjualan per Hari: `Laporan penjualan melalui telegram.png`
 
 ## Teknologi yang Digunakan
 
 - **n8n** (otomatisasi workflow)
 - **Google Sheets** (penyimpanan data)
 - **Google Data Studio / Looker Studio** (visualisasi dashboard)
+- **Telegram Bot** (laporan penjualan otomatis per hari)
 
 ## Catatan
 
